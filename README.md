@@ -1,93 +1,192 @@
-# backend-repo-template
+<p align="center">
+  <img align="center" src="./assets/logo.png" height="30%" 
+  width="30%"  alt="flexprice logo"/>
+</p>
+<h3 align="center">
+<b>
+ Monetization Infrastructure Built for AI Native Companies 
+</b>
+</h3 >
+<p align="center">
+Flexprice lets AI-native and SaaS teams operate usage-based, credit-based, and hybrid pricing with real-time metering and reporting that scales as your product evolves.
+</p>
+
+<h5 align="center">
+
+[Docs](https://docs.flexprice.io) • [Demo](https://www.loom.com/share/60d8308781254fe0bc5be341501f9fd5) • [Website](https://flexprice.io/) • [LinkedIn](https://www.linkedin.com/company/flexpriceio) • [X](https://x.com/tryflexprice) • [Slack Community](https://flexpricecommunity.slack.com/ssb/redirect#/shared-invite/email)
 
 
+[![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white)](https://pkg.go.dev/github.com/flexprice/go-sdk) [![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://pypi.org/project/flexprice) [![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)](https://www.npmjs.com/package/@flexprice/sdk) 
 
-## Getting started
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+<a href="https://trendshift.io/repositories/14669" target="_blank"><img src="https://trendshift.io/api/badge/repositories/14669" alt="flexprice%2Fflexprice | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+<a href="https://www.producthunt.com/products/flexprice?embed=true&utm_source=badge-top-post-badge&utm_medium=badge&utm_source=badge-flexprice" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=943445&theme=neutral&period=daily&t=1761109952518" alt="Flexprice - Usage&#0045;based&#0032;pricing&#0032;and&#0032;metering&#0032;for&#0032;developers | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 
-## Add your files
+</h5>
 
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+---
 
+## Open architecture
+The Flexprice core (metering, credits, pricing, billing) has an open and composable design. 
+
+Your application, whether it's running backend APIs, AI agents, or custom workflows, can send usage data to Flexprice. You can directly stream data from data warehouses or analytics pipelines as well.
+
+At the core, Flexprice processes this data in real time. We handle everything that usually ends up as custom logic built by developers. Our platform calculates pricing based on the customer’s plan, applies any prepaid or promotional credits, enforces feature limits, and generates accurate invoices automatically. Whether you're using seat-based subscriptions, usage-based pricing, or prepaid credit bundles, you can set up and iterate on your pricing model without writing billing infrastructure from scratch.
+
+After billing is computed, our platform connects to your existing tools for payments, CPQ, CRM, and accounting, ensuring billing information flows into the systems your business already uses. It can sync invoices to your payment processor, update customer data in your CRM, and push revenue numbers to your accounting tools.
+
+With this architecture, you get full control over how billing works inside your product, while saving your team from the complexity of maintaining it all.
+
+## Why billing is a developer problem?
+
+##### TL;DR
+*When existing billing tools don’t flex to your product’s needs, developers shoulder the burden eating up valuable development time and causing ongoing maintenance headaches.*
+
+<p align="center">
+  <img align="center" src="./assets/struggle.png" alt="struggle is real"/>
+</p>
+
+Modern app developers often find themselves wrestling with billing systems. Here are some of the biggest pain points that turn billing into a “developer problem”:
+
+- **Rigid billing tools (lack of flexibility):** Traditional billing services handle simple subscriptions or payments, but anything beyond that – usage metering, credit systems, feature gating, custom invoice logic – usually isn’t supported out of the box. Developers end up writing countless workarounds or custom code to accommodate these needs. In other words, if your pricing model doesn’t fit the tool, you’re stuck bending your product or building logic from scratch.
+
+- **Complex usage metering at scale:** Implementing accurate usage tracking is hard. It involves capturing high-volume events, aggregating them in real time, handling edge cases (prorations, time zones, etc.), and ensuring it all works reliably at scale. Few teams anticipate how many moving parts this requires until they’re deep in the weeds of building it.
+
+- **Vendor lock-in and black boxes:** Relying on third-party billing platforms can mean surrendering flexibility. Many SaaS billing providers are closed systems or charge a percentage fee on revenue, which frustrates engineers who want full control over their pricing logic and data. Changing providers later can be a massive undertaking, so teams feel “stuck” with a less-than-ideal solution.
+
+- **Delayed monetization & opportunity cost:** Every week spent building or patching a billing system is a week not spent on core product features. If it takes months to implement a new pricing model or usage-based feature, that’s delayed revenue and lost agility for the business. What might be scoped as a “quick two-month project” can quickly spiral into a multi-year maintenance headache, tying up engineering resources and slowing time-to-market for new offerings.
+
+## How Flexprice solves this
+
+Flexprice’s approach is to abstract away the hard parts of billing while preserving maximum flexibility and transparency for developers. It addresses the above pain points in several key ways:
+
+- **Developer-first design:** Flexprice is built API-first with easy integrations. You can instrument your app by simply sending usage events via SDKs, and Flexprice handles the aggregation, metering, and billing logic in real time. This means minimal code to write on your end and no need to reinvent metering or invoice calculations.
+
+* **Open-source and self-hostable:** Flexprice is open-source, so you can run it on your own infrastructure for full transparency and control. There’s no black-box dependency or surprise fees and you’re free from vendor lock-in. You can inspect the code, extend functionality, and trust that your billing logic is fully in your hands.
+    
+    
+- **Composable with your stack:** Rather than replacing your existing billing or payment provider, Flexprice augments it. You can build it from scratch or build on top of your existing billing providers like Stripe or Chargebee to manage usage data, pricing rules, credits, and entitlements. You can easily integrate with your existing payment gateways, CRM, CPQ, etc. This layered approach preserves your current workflows and customer touchpoints.
+    
+    
+* **Flexible pricing models out-of-the-box:** Whether you need pure usage-based billing, tiered plans, seat-based subscriptions, prepaid credits, free tiers with overage, or any hybrid model, Flexprice’s data model and rules engine can support it. Flexprice is designed to accommodate changing pricing strategies in minutues that would normally require schema updates and migration scripts.
+
+- **Transparency and visibility:** Because Flexprice meters every event and ties it to billing, you (and your customers) get clear visibility into usage and charges. It can provide real-time usage summaries and cost reports, helping both engineering and finance teams ensure everything lines up correctly. Customers get detailed invoices that show exactly what they’re paying for, reducing billing disputes or confusion.
+
+By handling the heavy lifting from real-time usage tracking to invoice generation, Flexprice lets your team focus on building your actual product, not the billing system around it
+
+## **Features**
+
+Flexprice provides a rich set of features to power usage-based and hybrid billing models. Key features include:
+
+<p align="center">
+  <img align="center" src="./assets/features.jpg" alt="features"/>
+</p>
+
+*  [**Usage Metering:**](https://docs.flexprice.io/api-reference/events/get-raw-events) Define custom usage events (API calls, compute time, database queries, etc.) at a granular level and track them in real time. Flexprice’s metering system can handle millions of events and aggregates usage data reliably, even at peak load. This ensures your billing is always up-to-date with actual customer usage.
+- [**Credit Grants (Prepaid & Promotional Credits):**](https://docs.flexprice.io/docs/Wallet/Creating%20a%20wallet) Support credit-based workflows with full control. You can grant prepaid credits or promotional credits to customers, set up automatic top-ups at thresholds, and expire unused credits as needed. Flexprice’s credit system is built-in, so you don’t need extra custom logic to handle one-time credits or wallets.
+* [**Pricing Plans:**](https://docs.flexprice.io/docs/Product%20catalogue/Plans/Overview) Design and iterate on pricing models with total flexibility – whether seat-based subscriptions, pure pay-as-you-go, volume-tiered pricing, or hybrids. You can launch new plans or modify existing ones (e.g. special pricing for a particular customer) without additional engineering effort. Flexprice lets you override plan settings per customer and manage plan versioning over time, making it easy to evolve pricing as your product and market strategy change.
+- [**Feature Management:**](https://docs.flexprice.io/docs/Product%20catalogue/Features/Overview) Manage feature entitlements and usage limits per plan or per customer. Flexprice lets you define feature toggles (on/off), metered feature limits, or configuration values tied to plans. You can enforce usage limits in your application by checking with Flexprice (for example, limit API calls per month or enable/disable certain features based on plan) without building complex entitlement logic yourself. This ensures that your product’s feature access is always in sync with what the customer has paid for.
+* [**Subscriptions & Invoicing:**](https://docs.flexprice.io/docs/Invoices/Overview) Flexprice generates clear, accurate invoices based on real-time usage data, subscriptions, and credits. It automates billing cycles – handling proration, overages, and credit application – and produces invoice line items that give customers full visibility into their charges. Finance teams can easily reconcile billing because every charge is linked to tracked usage or a defined price. You can also integrate this with your payment processor to automate charging customers once an invoice is finalized.
+
+Each of these features is accessible via Flexprice’s APIs and dashboard, allowing you to mix and match to build the exact billing experience you need.
+
+
+### 🚀 Setting up Flexprice from source for development and contributions
+
+To run Flexprice for local development or running from source, you will need
+
+1. [Golang](https://go.dev/)
+2. [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
+3. Any of the below supported platform environments:
+    1. [Linux based environment](https://en.wikipedia.org/wiki/Comparison_of_Linux_distributions)
+    2. [OSX (Darwin) based environment](https://en.wikipedia.org/wiki/MacOS)
+    3. WSL under Windows
+
+#### Quick Setup with Docker Compose
+
+The easiest way to get started is using our Docker Compose setup:
+
+```bash
+# Clone the repository
+git clone https://github.com/flexprice/flexprice
+cd flexprice
+
+# Set up the complete development environment
+make dev-setup
 ```
-cd existing_repo
-git remote add origin https://gitlab.famapp.in/backend/backend-template-owner/backend-repo-template.git
-git branch -M main
-git push -uf origin main
+
+This will:
+1. Start all required infrastructure (PostgreSQL, Kafka, ClickHouse, Temporal)
+2. Build the FlexPrice application image
+3. Run database migrations and initialize Kafka
+4. Start all FlexPrice services (API, Consumer, Worker)
+
+Once complete, you can access:
+- FlexPrice API: http://localhost:8080
+- Temporal UI: http://localhost:8088
+- Kafka UI: http://localhost:8084 (with profile 'dev')
+- ClickHouse UI: http://localhost:8123
+
+#### Useful Commands
+
+```bash
+# Restart only the FlexPrice services
+make restart-flexprice
+
+# Stop all services
+make down
+
+# Clean everything and start fresh
+make clean-start
+
+# Build the FlexPrice image separately
+make build-image
+
+# Start only the FlexPrice services
+make start-flexprice
 ```
 
-## Integrate with your tools
+#### Running Without Docker
 
-* [Set up project integrations](https://gitlab.famapp.in/backend/backend-template-owner/backend-repo-template/-/settings/integrations)
+If you prefer to run the application directly:
 
-## Collaborate with your team
+```bash
+# Start the required infrastructure
+docker compose up -d postgres kafka clickhouse temporal temporal-ui
 
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+# Run the application locally
+go run cmd/server/main.go
+```
 
-## Test and Deploy
 
-Use the built-in continuous integration in GitLab.
+## 👨🏻‍💻 Let's Build Together! 👩🏻‍💻
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
+Whether you're a newbie coder or a wizard 🧙‍♀️, your perspective is golden. Take a peek at our:
 
-***
+📜 [Contribution Guidelines](CONTRIBUTING.md)
 
-# Editing this README
+🏗️ [Local Development Setup](SETUP.md)
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+❤️ [Code of Conduct](CODE_OF_CONDUCT.md)
 
-## Suggestions for a good README
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/flexprice/flexprice)
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+## Contributors
 
-## Name
-Choose a self-explaining name for your project.
+<a href="https://github.com/flexprice/flexprice/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=flexprice/flexprice" />
+</a>
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+## Repo Activity
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+![Alt](https://repobeats.axiom.co/api/embed/4d6e208eab20ff0615787615c4fa022591adfa6b.svg "Repobeats analytics image")
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+<!-- LICENSE -->
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Flexprice is a commercial open source company, which means some parts of this open source repository require a commercial license. The concept is called "Open Core" where the core technology (99%) is fully open source, licensed under [AGPLv3](https://opensource.org/license/agpl-v3) and the last 1% is covered under a commercial license (["/ee" Enterprise Edition"]).
+
+> [!TIP]
+> We work closely with the community and always invite feedback about what should be open and what is fine to be commercial. This list is not set and stone and we have moved things from commercial to open in the past. Please open a [discussion](https://github.com/flexprice/flexprice/discussions) if you feel like something is wrong.

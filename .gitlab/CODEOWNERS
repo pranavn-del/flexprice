@@ -5,4 +5,5 @@ deploy/
 .gitlab/
 
 [Application Code] ## Add your codeowners here
-*
+* @pranav.n @noone @sovajit.roy @ravi_ujjwal
+
