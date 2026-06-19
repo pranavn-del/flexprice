@@ -120,6 +120,11 @@ func DisplayOrder(v int) predicate.Plan {
 	return predicate.Plan(sql.FieldEQ(FieldDisplayOrder, v))
 }
 
+// Sku applies equality check predicate on the "sku" field. It's identical to SkuEQ.
+func Sku(v string) predicate.Plan {
+	return predicate.Plan(sql.FieldEQ(FieldSku, v))
+}
+
 // TenantIDEQ applies the EQ predicate on the "tenant_id" field.
 func TenantIDEQ(v string) predicate.Plan {
 	return predicate.Plan(sql.FieldEQ(FieldTenantID, v))
@@ -818,6 +823,71 @@ func DisplayOrderLT(v int) predicate.Plan {
 // DisplayOrderLTE applies the LTE predicate on the "display_order" field.
 func DisplayOrderLTE(v int) predicate.Plan {
 	return predicate.Plan(sql.FieldLTE(FieldDisplayOrder, v))
+}
+
+// SkuEQ applies the EQ predicate on the "sku" field.
+func SkuEQ(v string) predicate.Plan {
+	return predicate.Plan(sql.FieldEQ(FieldSku, v))
+}
+
+// SkuNEQ applies the NEQ predicate on the "sku" field.
+func SkuNEQ(v string) predicate.Plan {
+	return predicate.Plan(sql.FieldNEQ(FieldSku, v))
+}
+
+// SkuIn applies the In predicate on the "sku" field.
+func SkuIn(vs ...string) predicate.Plan {
+	return predicate.Plan(sql.FieldIn(FieldSku, vs...))
+}
+
+// SkuNotIn applies the NotIn predicate on the "sku" field.
+func SkuNotIn(vs ...string) predicate.Plan {
+	return predicate.Plan(sql.FieldNotIn(FieldSku, vs...))
+}
+
+// SkuGT applies the GT predicate on the "sku" field.
+func SkuGT(v string) predicate.Plan {
+	return predicate.Plan(sql.FieldGT(FieldSku, v))
+}
+
+// SkuGTE applies the GTE predicate on the "sku" field.
+func SkuGTE(v string) predicate.Plan {
+	return predicate.Plan(sql.FieldGTE(FieldSku, v))
+}
+
+// SkuLT applies the LT predicate on the "sku" field.
+func SkuLT(v string) predicate.Plan {
+	return predicate.Plan(sql.FieldLT(FieldSku, v))
+}
+
+// SkuLTE applies the LTE predicate on the "sku" field.
+func SkuLTE(v string) predicate.Plan {
+	return predicate.Plan(sql.FieldLTE(FieldSku, v))
+}
+
+// SkuContains applies the Contains predicate on the "sku" field.
+func SkuContains(v string) predicate.Plan {
+	return predicate.Plan(sql.FieldContains(FieldSku, v))
+}
+
+// SkuHasPrefix applies the HasPrefix predicate on the "sku" field.
+func SkuHasPrefix(v string) predicate.Plan {
+	return predicate.Plan(sql.FieldHasPrefix(FieldSku, v))
+}
+
+// SkuHasSuffix applies the HasSuffix predicate on the "sku" field.
+func SkuHasSuffix(v string) predicate.Plan {
+	return predicate.Plan(sql.FieldHasSuffix(FieldSku, v))
+}
+
+// SkuEqualFold applies the EqualFold predicate on the "sku" field.
+func SkuEqualFold(v string) predicate.Plan {
+	return predicate.Plan(sql.FieldEqualFold(FieldSku, v))
+}
+
+// SkuContainsFold applies the ContainsFold predicate on the "sku" field.
+func SkuContainsFold(v string) predicate.Plan {
+	return predicate.Plan(sql.FieldContainsFold(FieldSku, v))
 }
 
 // HasCreditGrants applies the HasEdge predicate on the "credit_grants" edge.

@@ -17,6 +17,7 @@ type CreatePlanRequest struct {
 	Name         string         `json:"name" validate:"required"`
 	LookupKey    string         `json:"lookup_key"`
 	Description  string         `json:"description"`
+	SKU          string         `json:"sku" validate:"required"`
 	DisplayOrder *int           `json:"display_order,omitempty"`
 	Metadata     types.Metadata `json:"metadata,omitempty"`
 }
@@ -94,6 +95,7 @@ func (r *CreatePlanRequest) ToPlan(ctx context.Context) *plan.Plan {
 		LookupKey:     r.LookupKey,
 		Name:          r.Name,
 		Description:   r.Description,
+		SKU:           r.SKU,
 		EnvironmentID: types.GetEnvironmentID(ctx),
 		Metadata:      r.Metadata,
 		BaseModel:     types.GetDefaultBaseModel(ctx),
@@ -135,6 +137,7 @@ type UpdatePlanRequest struct {
 	Name         *string        `json:"name,omitempty"`
 	LookupKey    *string        `json:"lookup_key,omitempty"`
 	Description  *string        `json:"description,omitempty"`
+	SKU          *string        `json:"sku,omitempty"`
 	DisplayOrder *int           `json:"display_order,omitempty"`
 	Metadata     types.Metadata `json:"metadata,omitempty"`
 }

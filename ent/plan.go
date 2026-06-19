@@ -42,6 +42,8 @@ type Plan struct {
 	Description string `json:"description,omitempty"`
 	// DisplayOrder holds the value of the "display_order" field.
 	DisplayOrder int `json:"display_order,omitempty"`
+	// Sku holds the value of the "sku" field.
+	Sku string `json:"sku,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PlanQuery when eager-loading is set.
 	Edges        PlanEdges `json:"edges"`
@@ -75,7 +77,7 @@ func (*Plan) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case plan.FieldDisplayOrder:
 			values[i] = new(sql.NullInt64)
-		case plan.FieldID, plan.FieldTenantID, plan.FieldStatus, plan.FieldCreatedBy, plan.FieldUpdatedBy, plan.FieldEnvironmentID, plan.FieldLookupKey, plan.FieldName, plan.FieldDescription:
+		case plan.FieldID, plan.FieldTenantID, plan.FieldStatus, plan.FieldCreatedBy, plan.FieldUpdatedBy, plan.FieldEnvironmentID, plan.FieldLookupKey, plan.FieldName, plan.FieldDescription, plan.FieldSku:
 			values[i] = new(sql.NullString)
 		case plan.FieldCreatedAt, plan.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -174,6 +176,12 @@ func (pl *Plan) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				pl.DisplayOrder = int(value.Int64)
 			}
+		case plan.FieldSku:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field sku", values[i])
+			} else if value.Valid {
+				pl.Sku = value.String
+			}
 		default:
 			pl.selectValues.Set(columns[i], values[i])
 		}
@@ -250,6 +258,9 @@ func (pl *Plan) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("display_order=")
 	builder.WriteString(fmt.Sprintf("%v", pl.DisplayOrder))
+	builder.WriteString(", ")
+	builder.WriteString("sku=")
+	builder.WriteString(pl.Sku)
 	builder.WriteByte(')')
 	return builder.String()
 }

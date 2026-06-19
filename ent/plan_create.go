@@ -165,6 +165,12 @@ func (pc *PlanCreate) SetNillableDisplayOrder(i *int) *PlanCreate {
 	return pc
 }
 
+// SetSku sets the "sku" field.
+func (pc *PlanCreate) SetSku(s string) *PlanCreate {
+	pc.mutation.SetSku(s)
+	return pc
+}
+
 // SetID sets the "id" field.
 func (pc *PlanCreate) SetID(s string) *PlanCreate {
 	pc.mutation.SetID(s)
@@ -273,6 +279,14 @@ func (pc *PlanCreate) check() error {
 	if _, ok := pc.mutation.DisplayOrder(); !ok {
 		return &ValidationError{Name: "display_order", err: errors.New(`ent: missing required field "Plan.display_order"`)}
 	}
+	if _, ok := pc.mutation.Sku(); !ok {
+		return &ValidationError{Name: "sku", err: errors.New(`ent: missing required field "Plan.sku"`)}
+	}
+	if v, ok := pc.mutation.Sku(); ok {
+		if err := plan.SkuValidator(v); err != nil {
+			return &ValidationError{Name: "sku", err: fmt.Errorf(`ent: validator failed for field "Plan.sku": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -355,6 +369,10 @@ func (pc *PlanCreate) createSpec() (*Plan, *sqlgraph.CreateSpec) {
 	if value, ok := pc.mutation.DisplayOrder(); ok {
 		_spec.SetField(plan.FieldDisplayOrder, field.TypeInt, value)
 		_node.DisplayOrder = value
+	}
+	if value, ok := pc.mutation.Sku(); ok {
+		_spec.SetField(plan.FieldSku, field.TypeString, value)
+		_node.Sku = value
 	}
 	if nodes := pc.mutation.CreditGrantsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

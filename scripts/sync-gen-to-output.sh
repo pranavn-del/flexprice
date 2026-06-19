@@ -18,4 +18,19 @@ for lang in go typescript python mcp; do
   fi
 done
 
-echo "Synced central gen to api/*/.speakeasy/gen.yaml"
+# Also sync to custom output paths defined in workflow.yaml (e.g. ../flexprice-go)
+if [ -f ".speakeasy/workflow.yaml" ]; then
+  while IFS= read -r line; do
+    output_path="${line#*output: }"
+    if [[ "$output_path" != api/* ]]; then
+      dest_dir="${output_path}/.speakeasy"
+      if [ -d "$output_path" ] && [ -f ".speakeasy/gen/go.yaml" ]; then
+        mkdir -p "$dest_dir"
+        cp ".speakeasy/gen/go.yaml" "$dest_dir/gen.yaml"
+        echo "Copied .speakeasy/gen/go.yaml -> $dest_dir/gen.yaml"
+      fi
+    fi
+  done < <(grep "output:" .speakeasy/workflow.yaml)
+fi
+
+echo "Synced central gen to output/.speakeasy/gen.yaml"

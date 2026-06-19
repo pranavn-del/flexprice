@@ -1,4 +1,4 @@
-speakeasyVersion: 1.761.1
+speakeasyVersion: 1.784.0
 sources:
     swagger-json:
         sourceNamespace: swagger-json
@@ -13,8 +13,6 @@ targets:
         sourceNamespace: swagger-json
         sourceRevisionDigest: sha256:5f0d53ae87c0c797fd5bb43a4a0e925f2aa226464790694c3fbbcb4c5c238c50
         sourceBlobDigest: sha256:dcd58f9676bb05dade69949a7a1acc747d76f8f073ec9e5649a93b5e693808c1
-        codeSamplesNamespace: swagger-json-go-code-samples
-        codeSamplesRevisionDigest: sha256:da9acc47152fe575c84b1ac4f28029118de794504bddeac4e9ad691cb181e6ce
     flexprice-mcp:
         source: swagger-json-mcp
     flexprice-python:
@@ -49,7 +47,7 @@ workflow:
         flexprice-go:
             target: go
             source: swagger-json
-            output: ./api/go
+            output: ../flexprice-go
             codeSamples:
                 registry:
                     location: registry.speakeasyapi.dev/flexprice/prod/swagger-json-go-code-samples

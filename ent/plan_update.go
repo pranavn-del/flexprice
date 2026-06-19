@@ -156,6 +156,20 @@ func (pu *PlanUpdate) AddDisplayOrder(i int) *PlanUpdate {
 	return pu
 }
 
+// SetSku sets the "sku" field.
+func (pu *PlanUpdate) SetSku(s string) *PlanUpdate {
+	pu.mutation.SetSku(s)
+	return pu
+}
+
+// SetNillableSku sets the "sku" field if the given value is not nil.
+func (pu *PlanUpdate) SetNillableSku(s *string) *PlanUpdate {
+	if s != nil {
+		pu.SetSku(*s)
+	}
+	return pu
+}
+
 // AddCreditGrantIDs adds the "credit_grants" edge to the CreditGrant entity by IDs.
 func (pu *PlanUpdate) AddCreditGrantIDs(ids ...string) *PlanUpdate {
 	pu.mutation.AddCreditGrantIDs(ids...)
@@ -240,6 +254,11 @@ func (pu *PlanUpdate) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Plan.name": %w`, err)}
 		}
 	}
+	if v, ok := pu.mutation.Sku(); ok {
+		if err := plan.SkuValidator(v); err != nil {
+			return &ValidationError{Name: "sku", err: fmt.Errorf(`ent: validator failed for field "Plan.sku": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -299,6 +318,9 @@ func (pu *PlanUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := pu.mutation.AddedDisplayOrder(); ok {
 		_spec.AddField(plan.FieldDisplayOrder, field.TypeInt, value)
+	}
+	if value, ok := pu.mutation.Sku(); ok {
+		_spec.SetField(plan.FieldSku, field.TypeString, value)
 	}
 	if pu.mutation.CreditGrantsCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -492,6 +514,20 @@ func (puo *PlanUpdateOne) AddDisplayOrder(i int) *PlanUpdateOne {
 	return puo
 }
 
+// SetSku sets the "sku" field.
+func (puo *PlanUpdateOne) SetSku(s string) *PlanUpdateOne {
+	puo.mutation.SetSku(s)
+	return puo
+}
+
+// SetNillableSku sets the "sku" field if the given value is not nil.
+func (puo *PlanUpdateOne) SetNillableSku(s *string) *PlanUpdateOne {
+	if s != nil {
+		puo.SetSku(*s)
+	}
+	return puo
+}
+
 // AddCreditGrantIDs adds the "credit_grants" edge to the CreditGrant entity by IDs.
 func (puo *PlanUpdateOne) AddCreditGrantIDs(ids ...string) *PlanUpdateOne {
 	puo.mutation.AddCreditGrantIDs(ids...)
@@ -589,6 +625,11 @@ func (puo *PlanUpdateOne) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Plan.name": %w`, err)}
 		}
 	}
+	if v, ok := puo.mutation.Sku(); ok {
+		if err := plan.SkuValidator(v); err != nil {
+			return &ValidationError{Name: "sku", err: fmt.Errorf(`ent: validator failed for field "Plan.sku": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -665,6 +706,9 @@ func (puo *PlanUpdateOne) sqlSave(ctx context.Context) (_node *Plan, err error) 
 	}
 	if value, ok := puo.mutation.AddedDisplayOrder(); ok {
 		_spec.AddField(plan.FieldDisplayOrder, field.TypeInt, value)
+	}
+	if value, ok := puo.mutation.Sku(); ok {
+		_spec.SetField(plan.FieldSku, field.TypeString, value)
 	}
 	if puo.mutation.CreditGrantsCleared() {
 		edge := &sqlgraph.EdgeSpec{

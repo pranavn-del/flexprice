@@ -38,6 +38,8 @@ const (
 	FieldDescription = "description"
 	// FieldDisplayOrder holds the string denoting the display_order field in the database.
 	FieldDisplayOrder = "display_order"
+	// FieldSku holds the string denoting the sku field in the database.
+	FieldSku = "sku"
 	// EdgeCreditGrants holds the string denoting the credit_grants edge name in mutations.
 	EdgeCreditGrants = "credit_grants"
 	// Table holds the table name of the plan in the database.
@@ -66,6 +68,7 @@ var Columns = []string{
 	FieldName,
 	FieldDescription,
 	FieldDisplayOrder,
+	FieldSku,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -95,6 +98,8 @@ var (
 	NameValidator func(string) error
 	// DefaultDisplayOrder holds the default value on creation for the "display_order" field.
 	DefaultDisplayOrder int
+	// SkuValidator is a validator for the "sku" field. It is called by the builders before save.
+	SkuValidator func(string) error
 )
 
 // OrderOption defines the ordering options for the Plan queries.
@@ -158,6 +163,11 @@ func ByDescription(opts ...sql.OrderTermOption) OrderOption {
 // ByDisplayOrder orders the results by the display_order field.
 func ByDisplayOrder(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDisplayOrder, opts...).ToFunc()
+}
+
+// BySku orders the results by the sku field.
+func BySku(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldSku, opts...).ToFunc()
 }
 
 // ByCreditGrantsCount orders the results by credit_grants count.

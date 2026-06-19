@@ -15,7 +15,7 @@ targets:
     flexprice-go:
         target: go
         source: swagger-json
-        output: ./api/go
+        output: ../flexprice-go
         codeSamples:
             registry:
                 location: registry.speakeasyapi.dev/flexprice/prod/swagger-json-go-code-samples

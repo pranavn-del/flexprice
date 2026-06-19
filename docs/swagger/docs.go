@@ -6683,6 +6683,59 @@ const docTemplate = `{
                 }
             }
         },
+        "/subscriptions/lineitems/search": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "List subscription line items with a JSON filter (subscription, customer, price, pagination, expand=prices, etc.).",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Search subscription line items",
+                "operationId": "querySubscriptionLineItems",
+                "parameters": [
+                    {
+                        "description": "Filter",
+                        "name": "filter",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.SubscriptionLineItemFilter"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ListSubscriptionLineItemsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "$ref": "#/definitions/errors.ErrorResponse"
+                        }
+                    }
+                },
+                "x-scope": "read"
+            }
+        },
         "/subscriptions/lineitems/{id}": {
             "put": {
                 "security": [
@@ -11505,6 +11558,20 @@ const docTemplate = `{
                 }
             }
         },
+        "ListSubscriptionLineItemsResponse": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/SubscriptionLineItemResponse"
+                    }
+                },
+                "pagination": {
+                    "$ref": "#/definitions/types.PaginationResponse"
+                }
+            }
+        },
         "ListSubscriptionsResponse": {
             "type": "object",
             "properties": {
@@ -13899,7 +13966,8 @@ const docTemplate = `{
         "CreatePlanRequest": {
             "type": "object",
             "required": [
-                "name"
+                "name",
+                "sku"
             ],
             "properties": {
                 "description": {
@@ -13915,6 +13983,9 @@ const docTemplate = `{
                     "$ref": "#/definitions/types.Metadata"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "sku": {
                     "type": "string"
                 }
             }
@@ -17397,6 +17468,9 @@ const docTemplate = `{
                         "$ref": "#/definitions/PriceResponse"
                     }
                 },
+                "sku": {
+                    "type": "string"
+                },
                 "status": {
                     "$ref": "#/definitions/types.Status"
                 },
@@ -19943,6 +20017,9 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                },
+                "sku": {
+                    "type": "string"
                 }
             }
         },
@@ -21058,6 +21135,9 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "sku": {
+                    "type": "string"
+                },
                 "status": {
                     "$ref": "#/definitions/types.Status"
                 },
@@ -21114,6 +21194,17 @@ const docTemplate = `{
                 "AddonAssociationEntityTypeSubscription",
                 "AddonAssociationEntityTypePlan",
                 "AddonAssociationEntityTypeAddon"
+            ]
+        },
+        "types.AddonCadence": {
+            "type": "string",
+            "enum": [
+                "onetime",
+                "recurring"
+            ],
+            "x-enum-varnames": [
+                "AddonCadenceOnetime",
+                "AddonCadenceRecurring"
             ]
         },
         "types.AddonFilter": {
@@ -21793,6 +21884,12 @@ const docTemplate = `{
                     "maximum": 1000,
                     "minimum": 1
                 },
+                "metadata": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
                 "offset": {
                     "type": "integer",
                     "minimum": 0
@@ -21968,6 +22065,17 @@ const docTemplate = `{
                 "EntityTypePrices",
                 "EntityTypeCustomers",
                 "EntityTypeFeatures"
+            ]
+        },
+        "types.EnvironmentType": {
+            "type": "string",
+            "enum": [
+                "development",
+                "production"
+            ],
+            "x-enum-varnames": [
+                "EnvironmentDevelopment",
+                "EnvironmentProduction"
             ]
         },
         "types.EventProcessingStatusType": {
@@ -22593,6 +22701,12 @@ const docTemplate = `{
                 "lookup_key": {
                     "type": "string"
                 },
+                "metadata": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
                 "offset": {
                     "type": "integer",
                     "minimum": 0
@@ -22609,6 +22723,9 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
+                },
+                "sku": {
+                    "type": "string"
                 },
                 "sort": {
                     "type": "array",
@@ -24662,28 +24779,6 @@ const docTemplate = `{
                 }
             }
         },
-        "types.AddonCadence": {
-            "type": "string",
-            "enum": [
-                "onetime",
-                "recurring"
-            ],
-            "x-enum-varnames": [
-                "AddonCadenceOnetime",
-                "AddonCadenceRecurring"
-            ]
-        },
-        "types.EnvironmentType": {
-            "type": "string",
-            "enum": [
-                "development",
-                "production"
-            ],
-            "x-enum-varnames": [
-                "EnvironmentDevelopment",
-                "EnvironmentProduction"
-            ]
-        },
         "types.ListResponse-dto_WalletResponse": {
             "type": "object",
             "properties": {
@@ -24702,6 +24797,110 @@ const docTemplate = `{
             "type": "object",
             "additionalProperties": {
                 "type": "string"
+            }
+        },
+        "types.SubscriptionLineItemFilter": {
+            "type": "object",
+            "properties": {
+                "active_filter": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "addon_association_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "billing_periods": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "currencies": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "current_period_start": {
+                    "type": "string"
+                },
+                "customer_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "end_time": {
+                    "type": "string"
+                },
+                "entity_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "entity_type": {
+                    "$ref": "#/definitions/types.SubscriptionLineItemEntityType"
+                },
+                "expand": {
+                    "type": "string"
+                },
+                "filters": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.FilterCondition"
+                    }
+                },
+                "limit": {
+                    "type": "integer",
+                    "maximum": 1000,
+                    "minimum": 1
+                },
+                "meter_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "offset": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "order": {
+                    "type": "string",
+                    "enum": [
+                        "asc",
+                        "desc"
+                    ]
+                },
+                "price_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "sort": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.SortCondition"
+                    }
+                },
+                "start_time": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/types.Status"
+                },
+                "subscription_ids": {
+                    "description": "Specific filters",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
             }
         },
         "webhookDto.AlertWebhookPayload": {

@@ -282,6 +282,9 @@ func (s *planService) UpdatePlan(ctx context.Context, id string, req dto.UpdateP
 	if req.DisplayOrder != nil {
 		plan.DisplayOrder = req.DisplayOrder
 	}
+	if req.SKU != nil {
+		plan.SKU = *req.SKU
+	}
 
 	// Start a transaction for updating plan
 	err = s.DB.WithTx(ctx, func(ctx context.Context) error {
@@ -878,6 +881,7 @@ func (s *planService) ClonePlan(ctx context.Context, id string, req dto.ClonePla
 		Name:          req.Name,
 		LookupKey:     req.LookupKey,
 		Description:   description,
+		SKU:           sourcePlan.SKU,
 		EnvironmentID: sourcePlan.EnvironmentID,
 		Metadata:      metadata,
 		DisplayOrder:  displayOrder,

@@ -13,6 +13,7 @@ type PlanFilter struct {
 	Sort      []*SortCondition   `json:"sort,omitempty" form:"sort" validate:"omitempty"`
 	PlanIDs   []string           `json:"plan_ids,omitempty" form:"plan_ids" validate:"omitempty"`
 	LookupKey *string            `json:"lookup_key,omitempty" form:"lookup_key" validate:"omitempty"`
+	SKU       *string            `json:"sku,omitempty" form:"sku" validate:"omitempty"`
 }
 
 // NewPlanFilter creates a new plan filter with default options

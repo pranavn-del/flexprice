@@ -68,6 +68,7 @@ func (r *planRepository) Create(ctx context.Context, p *domainPlan.Plan) error {
 		SetEnvironmentID(p.EnvironmentID).
 		SetMetadata(p.Metadata).
 		SetNillableDisplayOrder(p.DisplayOrder).
+		SetSku(p.SKU).
 		Save(ctx)
 
 	if err != nil {
@@ -300,6 +301,7 @@ func (r *planRepository) Update(ctx context.Context, p *domainPlan.Plan) error {
 		SetDescription(p.Description).
 		SetMetadata(p.Metadata).
 		SetNillableDisplayOrder(p.DisplayOrder).
+		SetSku(p.SKU).
 		SetUpdatedAt(time.Now().UTC()).
 		SetUpdatedBy(types.GetUserID(ctx)).
 		Save(ctx)
@@ -456,6 +458,10 @@ func (o PlanQueryOptions) applyEntityQueryOptions(_ context.Context, f *types.Pl
 
 	if f.LookupKey != nil {
 		query = query.Where(plan.LookupKeyEQ(*f.LookupKey))
+	}
+
+	if f.SKU != nil {
+		query = query.Where(plan.Sku(*f.SKU))
 	}
 
 	query, err = dsl.ApplyMetadataFilter[PlanQuery, predicate.Plan](

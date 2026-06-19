@@ -48,6 +48,11 @@ func (Plan) Fields() []ent.Field {
 			Optional(),
 		field.Int("display_order").
 			Default(0),
+		field.String("sku").
+			SchemaType(map[string]string{
+				"postgres": "varchar(255)",
+			}).
+			NotEmpty(),
 	}
 }
 

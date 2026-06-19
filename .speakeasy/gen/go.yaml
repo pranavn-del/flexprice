@@ -51,7 +51,7 @@ go:
   inferUnionDiscriminators: true
   maxMethodParams: 4
   methodArguments: require-security-and-request
-  modulePath: github.com/flexprice/go-sdk
+  modulePath: gitlab.famapp.in/backend/flexprice-go
   multipartArrayFormat: standard
   nullableOptionalWrapper: true
   respectRequiredFields: true

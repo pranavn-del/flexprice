@@ -1329,6 +1329,7 @@ var (
 		{Name: "name", Type: field.TypeString, SchemaType: map[string]string{"postgres": "varchar(255)"}},
 		{Name: "description", Type: field.TypeString, Nullable: true, Size: 2147483647},
 		{Name: "display_order", Type: field.TypeInt, Default: 0},
+		{Name: "sku", Type: field.TypeString, SchemaType: map[string]string{"postgres": "varchar(255)"}},
 	}
 	// PlansTable holds the schema information for the "plans" table.
 	PlansTable = &schema.Table{
