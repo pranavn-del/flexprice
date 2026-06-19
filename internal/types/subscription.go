@@ -326,6 +326,9 @@ type SubscriptionFilter struct {
 	// SubscriptionType filters by subscription type
 	SubscriptionTypes []SubscriptionType `json:"subscription_type,omitempty" form:"subscription_type"`
 
+	// Sku filters by plan SKU (denormalized on subscription)
+	Sku *string `json:"sku,omitempty" form:"sku"`
+
 	// WithLineItems includes line items in the response
 	WithLineItems bool `json:"with_line_items,omitempty" form:"with_line_items"`
 }

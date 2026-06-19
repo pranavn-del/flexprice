@@ -288,6 +288,11 @@ func SubscriptionType(v types.SubscriptionType) predicate.Subscription {
 	return predicate.Subscription(sql.FieldEQ(FieldSubscriptionType, vc))
 }
 
+// Sku applies equality check predicate on the "sku" field. It's identical to SkuEQ.
+func Sku(v string) predicate.Subscription {
+	return predicate.Subscription(sql.FieldEQ(FieldSku, v))
+}
+
 // TenantIDEQ applies the EQ predicate on the "tenant_id" field.
 func TenantIDEQ(v string) predicate.Subscription {
 	return predicate.Subscription(sql.FieldEQ(FieldTenantID, v))
@@ -2920,6 +2925,81 @@ func SubscriptionTypeEqualFold(v types.SubscriptionType) predicate.Subscription 
 func SubscriptionTypeContainsFold(v types.SubscriptionType) predicate.Subscription {
 	vc := string(v)
 	return predicate.Subscription(sql.FieldContainsFold(FieldSubscriptionType, vc))
+}
+
+// SkuEQ applies the EQ predicate on the "sku" field.
+func SkuEQ(v string) predicate.Subscription {
+	return predicate.Subscription(sql.FieldEQ(FieldSku, v))
+}
+
+// SkuNEQ applies the NEQ predicate on the "sku" field.
+func SkuNEQ(v string) predicate.Subscription {
+	return predicate.Subscription(sql.FieldNEQ(FieldSku, v))
+}
+
+// SkuIn applies the In predicate on the "sku" field.
+func SkuIn(vs ...string) predicate.Subscription {
+	return predicate.Subscription(sql.FieldIn(FieldSku, vs...))
+}
+
+// SkuNotIn applies the NotIn predicate on the "sku" field.
+func SkuNotIn(vs ...string) predicate.Subscription {
+	return predicate.Subscription(sql.FieldNotIn(FieldSku, vs...))
+}
+
+// SkuGT applies the GT predicate on the "sku" field.
+func SkuGT(v string) predicate.Subscription {
+	return predicate.Subscription(sql.FieldGT(FieldSku, v))
+}
+
+// SkuGTE applies the GTE predicate on the "sku" field.
+func SkuGTE(v string) predicate.Subscription {
+	return predicate.Subscription(sql.FieldGTE(FieldSku, v))
+}
+
+// SkuLT applies the LT predicate on the "sku" field.
+func SkuLT(v string) predicate.Subscription {
+	return predicate.Subscription(sql.FieldLT(FieldSku, v))
+}
+
+// SkuLTE applies the LTE predicate on the "sku" field.
+func SkuLTE(v string) predicate.Subscription {
+	return predicate.Subscription(sql.FieldLTE(FieldSku, v))
+}
+
+// SkuContains applies the Contains predicate on the "sku" field.
+func SkuContains(v string) predicate.Subscription {
+	return predicate.Subscription(sql.FieldContains(FieldSku, v))
+}
+
+// SkuHasPrefix applies the HasPrefix predicate on the "sku" field.
+func SkuHasPrefix(v string) predicate.Subscription {
+	return predicate.Subscription(sql.FieldHasPrefix(FieldSku, v))
+}
+
+// SkuHasSuffix applies the HasSuffix predicate on the "sku" field.
+func SkuHasSuffix(v string) predicate.Subscription {
+	return predicate.Subscription(sql.FieldHasSuffix(FieldSku, v))
+}
+
+// SkuIsNil applies the IsNil predicate on the "sku" field.
+func SkuIsNil() predicate.Subscription {
+	return predicate.Subscription(sql.FieldIsNull(FieldSku))
+}
+
+// SkuNotNil applies the NotNil predicate on the "sku" field.
+func SkuNotNil() predicate.Subscription {
+	return predicate.Subscription(sql.FieldNotNull(FieldSku))
+}
+
+// SkuEqualFold applies the EqualFold predicate on the "sku" field.
+func SkuEqualFold(v string) predicate.Subscription {
+	return predicate.Subscription(sql.FieldEqualFold(FieldSku, v))
+}
+
+// SkuContainsFold applies the ContainsFold predicate on the "sku" field.
+func SkuContainsFold(v string) predicate.Subscription {
+	return predicate.Subscription(sql.FieldContainsFold(FieldSku, v))
 }
 
 // HasLineItems applies the HasEdge predicate on the "line_items" edge.

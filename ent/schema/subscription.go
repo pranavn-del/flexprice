@@ -202,6 +202,13 @@ func (Subscription) Fields() []ent.Field {
 			Default(string(types.SubscriptionTypeStandalone)).
 			GoType(types.SubscriptionType("")).
 			Comment("Subscription type within a customer hierarchy (standalone, parent, inherited)"),
+		field.String("sku").
+			SchemaType(map[string]string{
+				"postgres": "varchar(255)",
+			}).
+			Optional().
+			Nillable().
+			Comment("SKU denormalized from plan.sku at subscription creation time"),
 	}
 }
 
@@ -235,5 +242,9 @@ func (Subscription) Indexes() []ent.Index {
 		index.Fields("tenant_id", "environment_id", "subscription_status", "status"),
 		// For billing period updates
 		index.Fields("tenant_id", "environment_id", "current_period_end", "subscription_status", "status"),
+		// Enforce at most one active subscription per customer per sku
+		index.Fields("tenant_id", "environment_id", "customer_id", "sku").
+			Unique().
+			Annotations(entsql.IndexWhere("subscription_status = 'active' AND status = 'published' AND sku IS NOT NULL")),
 	}
 }

@@ -136,6 +136,9 @@ type Subscription struct {
 	// SubscriptionType categorises the subscription within a customer hierarchy (standalone, parent, inherited).
 	SubscriptionType types.SubscriptionType `db:"subscription_type" json:"subscription_type"`
 
+	// Sku is denormalized from plan.sku at subscription creation time
+	Sku *string `db:"sku" json:"sku,omitempty"`
+
 	types.BaseModel
 }
 
@@ -251,6 +254,7 @@ func GetSubscriptionFromEnt(sub *ent.Subscription) *Subscription {
 		ParentSubscriptionID: sub.ParentSubscriptionID,
 		PaymentTerms:         sub.PaymentTerms,
 		SubscriptionType:     types.SubscriptionType(sub.SubscriptionType),
+		Sku:                  sub.Sku,
 		BaseModel: types.BaseModel{
 			TenantID:  sub.TenantID,
 			Status:    types.Status(sub.Status),
