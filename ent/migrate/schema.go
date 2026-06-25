@@ -2310,7 +2310,7 @@ var (
 	}
 	// WorkflowExecutionsColumns holds the columns for the "workflow_executions" table.
 	WorkflowExecutionsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString, Unique: true, SchemaType: map[string]string{"postgres": "varchar(26)"}},
+		{Name: "id", Type: field.TypeString, Unique: true, SchemaType: map[string]string{"postgres": "varchar(50)"}},
 		{Name: "tenant_id", Type: field.TypeString, SchemaType: map[string]string{"postgres": "varchar(50)"}},
 		{Name: "status", Type: field.TypeString, Default: "published", SchemaType: map[string]string{"postgres": "varchar(20)"}},
 		{Name: "created_at", Type: field.TypeTime},

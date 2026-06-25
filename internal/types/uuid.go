@@ -5,22 +5,22 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/oklog/ulid/v2"
+	"github.com/google/uuid"
 	"github.com/teris-io/shortid"
 )
 
-// GenerateUUID returns a k-sortable unique identifier
+// GenerateUUID returns a time-ordered UUIDv7 identifier
 func GenerateUUID() string {
-	return ulid.Make().String()
+	id, err := uuid.NewV7()
+	if err != nil {
+		panic("failed to generate UUIDv7: " + err.Error())
+	}
+	return id.String()
 }
 
-// GenerateUUIDWithPrefix returns a k-sortable unique identifier
-// with a prefix ex inv_0ujsswThIGTUYm2K8FjOOfXtY1K
-func GenerateUUIDWithPrefix(prefix string) string {
-	if prefix == "" {
-		return GenerateUUID()
-	}
-	return fmt.Sprintf("%s_%s", prefix, GenerateUUID())
+// GenerateUUIDWithPrefix returns a plain UUIDv7 identifier (prefix is ignored)
+func GenerateUUIDWithPrefix(_ string) string {
+	return GenerateUUID()
 }
 
 var (

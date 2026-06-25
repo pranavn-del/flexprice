@@ -6,7 +6,6 @@ import (
 	"entgo.io/ent/schema/index"
 	baseMixin "github.com/flexprice/flexprice/ent/schema/mixin"
 	"github.com/flexprice/flexprice/internal/types"
-	"github.com/oklog/ulid/v2"
 )
 
 // WorkflowExecution holds the schema definition for the WorkflowExecution entity.
@@ -26,15 +25,13 @@ func (WorkflowExecution) Mixin() []ent.Mixin {
 func (WorkflowExecution) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").
-			DefaultFunc(func() string {
-				return ulid.Make().String()
-			}).
+			DefaultFunc(types.GenerateUUID).
 			SchemaType(map[string]string{
-				"postgres": "varchar(26)",
+				"postgres": "varchar(50)",
 			}).
 			Unique().
 			Immutable().
-			Comment("ULID primary key"),
+			Comment("UUIDv7 primary key"),
 		field.String("workflow_id").
 			SchemaType(map[string]string{
 				"postgres": "varchar(255)",

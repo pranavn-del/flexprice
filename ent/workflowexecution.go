@@ -18,7 +18,7 @@ import (
 type WorkflowExecution struct {
 	config `json:"-"`
 	// ID of the ent.
-	// ULID primary key
+	// UUIDv7 primary key
 	ID string `json:"id,omitempty"`
 	// TenantID holds the value of the "tenant_id" field.
 	TenantID string `json:"tenant_id,omitempty"`
