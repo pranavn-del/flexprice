@@ -1,24 +1,35 @@
 include:
-  - project: infra/gitlab-ci-templates
-    ref: main
-    file:
-      # utilities
-      - base/stages.yml
-      - base/defaults.yml
-      - base/rules.yml
-      - notify/ci-slack-notification.yml
-      # test-and-build stage
-      - lint/go-lint.yml
-      - test/go-test-coverage.yml
+ - project: infra/gitlab-ci-templates
+   ref: HEAD
+   file:
+     - golden_templates/backend/go-ci.yml
+
 
 workflow:
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == "main"'
-      when: always
-    - when: never
+   rules:
+     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == "main"'
+     - when: never
 
-lint:
-  extends: .go_lint
+
+variables:
+ DEPLOYMENT_ENVIRONMENT: "fmpy"
+ LINEAR_TICKETS: "false"
+ DIFF_COVER_THRESHOLD: "95"
 
 go_test_with_coverage:
   extends: .go_test_with_coverage
+
+deploy:
+  stage: deploy
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: on_success
+    - when: never
+  trigger:
+    include:
+      - project: infra/gitlab-ci-templates
+        ref: feature/staging-pipline
+        file: deploy/deployment-flow.yaml
+    strategy: depend
+  needs:
+    - job: push_uat
