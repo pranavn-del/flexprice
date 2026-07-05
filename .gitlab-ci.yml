@@ -10,7 +10,6 @@ include:
       # test-and-build stage
       - lint/go-lint.yml
       - test/go-test-coverage.yml
-      - build/go-build.yml
 
 workflow:
   rules:
@@ -23,6 +22,3 @@ lint:
 
 go_test_with_coverage:
   extends: .go_test_with_coverage
-
-build:
-  extends: .go_docker_build
