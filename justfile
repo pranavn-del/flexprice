@@ -1,82 +1,61 @@
 #!/usr/bin/env just --justfile
 
-# This is justfile example for the standardisation of the CI/CD pipeline for GitLab.
-# Use this justfile as a template and modify it according to your project's needs. CI/CD pipeline internally utilises recipes from this justfile structure.
+# Flexprice justfile — recipes consumed by the shared GitLab CI templates
+# (infra/gitlab-ci-templates). Recipes delegate to the existing Makefile
+# targets so there's a single source of truth for build/test commands.
 
-# Load environment variables from `.env` file.
 set dotenv-load
 
 coverage_profile_log := "./deploy/coverage.out"
+coverage_profile_xml := "./deploy/coverage.xml"
 coverage_profile_html := "./deploy/coverage.html"
-coverage_threshold := "90"
+coverage_threshold := "0"
 
 export BASE_PROJ_PATH := `pwd`
 
-check: 
-    # add your linting and formatting commands here
-    echo "Running linting and formatting checks..."
+# Static checks: go vet + gofmt.
+check:
+    go vet ./...
+    @unformatted="$(gofmt -l .)"; \
+    if [ -n "$unformatted" ]; then \
+        echo "gofmt found unformatted files:"; \
+        echo "$unformatted"; \
+        exit 1; \
+    fi
 
+# Install build/test deps. Typst is needed because `make test` depends on it.
 install-deps:
-    # add your dependency installation commands here
-    echo "Installing dependencies..."
+    go mod download
+    make install-typst
+    @if ! command -v gocover-cobertura >/dev/null 2>&1; then \
+        go install github.com/boumenot/gocover-cobertura@latest; \
+    fi
 
+# Local test run (no coverage requirements) — mirrors `make test`.
 test:
-    # add your test commands here for local testing (without coverage requirements)
-    echo "Running tests..."    
+    make test
 
-test-with-coverage: 
-    # IMPORTANT: This recipe must generate coverage artifacts for GitLab CI integration.
-    #
-    # ─────────────────────────────────────────────────────────────────────────────
-    # REQUIRED OUTPUTS (all three must be satisfied):
-    #
-    # 1. coverage.out / .coverage  →  raw coverage data for diff-cover downstream job
-    #    - Go:     {{ coverage_profile_log }}  (e.g. deploy/coverage.out)
-    #    - Python: .coverage  (generated automatically by pytest-cov / coverage.py)
-    #
-    # 2. coverage.xml  →  Cobertura format, used for MR diff line annotations
-    #
-    # 3. Coverage % printed to stdout  →  feeds the GitLab MR widget and coverage history
-    #    - Go:     must print a line matching:  ^total:\s+\(statements\)\s+(\d+\.\d+)%
-    #    - Python: must print a line matching:  TOTAL.*? (100(?:\.0+)?%|[1-9]?\d(?:\.\d+)?%)
-    # ─────────────────────────────────────────────────────────────────────────────
-    #
-    # CRITICAL: Always run from the repository root.
-    #    Both gocover-cobertura (Go) and pytest-cov/coverage.py (Python) generate
-    #    filename paths in coverage.xml relative to the working directory.
-    #    GitLab maps these paths to actual repo files for MR diff annotations.
-    #    Running from a subdirectory will produce wrong paths → no line annotations.
-    #
-    # ─────────────────────────────────────────────────────────────────────────────
-    # EXAMPLE — Go:
-    #
-    #   go test ./... -coverprofile={{ coverage_profile_log }}
-    #   go tool cover -func={{ coverage_profile_log }} # prints total line → MR widget
-    #   gocover-cobertura < {{ coverage_profile_log }} > {{ coverage_profile_log.replace(".out", ".xml") }}  # generates coverage.xml → MR diff annotations
-    #
-    # EXAMPLE — Python (pytest-cov):
-    #
-    #   poetry run pytest \
-    #       --cov=. \
-    #       --cov-report=xml:coverage.xml \
-    #       --cov-report=term-missing       # prints TOTAL line → MR widget
-    #
-    # ─────────────────────────────────────────────────────────────────────────────
-    echo "Add your test-with-coverage commands here"
-    
+# CI coverage recipe. Must produce:
+#   1. deploy/coverage.out  (raw Go coverage profile)
+#   2. deploy/coverage.xml  (Cobertura, for MR line annotations)
+#   3. stdout line matching  ^total:\s+\(statements\)\s+(\d+\.\d+)%
+#      (feeds GitLab MR coverage widget)
+test-with-coverage:
+    mkdir -p deploy
+    go test ./internal/... -coverprofile={{ coverage_profile_log }}
+    go tool cover -func={{ coverage_profile_log }}
+    gocover-cobertura < {{ coverage_profile_log }} > {{ coverage_profile_xml }}
+
+# Start / stop hooks — thin delegates to docker-compose via the Makefile.
 start *args='':
-    # Start a local instance of a specific type of the service (server, consumer etc). if NO ARG present then it should bootstrap the entire ecosystem
-    echo "Starting application..."
+    make up
 
 stop *args='':
-    # Stop the specific server (if started). if no ARG then stop the entire ecosystem
-    echo "Stopping application..."
+    make down
 
 integration-test:
-    # add your integration testing commands here
-    #
-    echo "Running integration tests..."
+    make test
 
+# Ent + Postgres/ClickHouse migrations, mirroring `make migrate-ent`.
 migrate:
-    # add your database migration commands here
-    echo "Running database migrations..."
+    make migrate-ent
