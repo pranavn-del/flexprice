@@ -1,0 +1,45 @@
+# flexprice-side CI (DEV TEST VARIANT): cross-project trigger to dev workspace.
+#
+# Fires on:
+#   1. MR events targeting fam/main-dev → creates/updates paired workspace MR,
+#                                          triggers dev workspace CI, waits.
+#   2. Push events on fam/main-dev     → re-syncs paired workspace MR to
+#                                          merged SHA.
+#
+# Requires CI variable WORKSPACE_ACCESS_TOKEN on this flexprice project
+# (api scope, Developer+ on pranav.n/flexprice-workspace).
+
+workflow:
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "fam/main-dev"'
+    - if: '$CI_COMMIT_BRANCH == "fam/main-dev" && $CI_PIPELINE_SOURCE == "push"'
+    - when: never
+
+stages:
+  - sync
+  - trigger
+
+variables:
+  WORKSPACE_PROJECT_PATH: "pranav.n/flexprice-workspace"
+  WORKSPACE_TARGET_BRANCH: "fam/main-dev"
+
+create_or_update_workspace_mr:
+  stage: sync
+  image: alpine:3.19
+  before_script:
+    - apk add --no-cache git bash curl jq
+  script:
+    - bash ci/create_workspace_pin_bump_mr.sh
+  artifacts:
+    reports:
+      dotenv: workspace-mr.env
+
+trigger_workspace_pipeline:
+  stage: trigger
+  needs:
+    - job: create_or_update_workspace_mr
+      artifacts: true
+  trigger:
+    project: $WORKSPACE_PROJECT_PATH
+    branch: $WORKSPACE_PIN_BRANCH
+    strategy: depend
